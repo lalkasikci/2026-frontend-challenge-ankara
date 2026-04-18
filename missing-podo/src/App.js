@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import './App.css';
 
 const PERSON_CATALOG = {
   'selin kaya': { id: 'selin-kaya', name: 'Selin Kaya', role: 'Organizer' },
@@ -8,7 +9,17 @@ const PERSON_CATALOG = {
   'kaan arslan': { id: 'kaan-arslan', name: 'Kaan Arslan', role: 'Photographer' },
   'derya akin': { id: 'derya-akin', name: 'Derya Akın', role: 'Vet student' },
   'derya akın': { id: 'derya-akin', name: 'Derya Akın', role: 'Vet student' },
+  'kagan': { id: 'kagan', name: 'Kağan', role: 'Person of interest' },
   podo: { id: 'podo', name: 'Podo', role: 'Missing pet' },
+};
+
+const PERSON_NAME_ALIASES = {
+  'kagan': 'kagan',
+  'kağan': 'kagan',
+  'kağan a': 'kagan',
+  'kağan a.': 'kagan',
+  'kagan a': 'kagan',
+  'kagan a.': 'kagan',
 };
 
 const JOTFORM_PROXY_BASE = process.env.REACT_APP_JOTFORM_PROXY_BASE || '/api/jotform';
@@ -77,21 +88,7 @@ export default function MissingPodoInvestigationApp() {
       setError('');
 
       try {
-        const results = await Promise.all(
-          SOURCE_CONFIG.map(async (source) => {
-            const response = await fetch(source.endpoint, {
-              headers: {
-                Accept: 'application/json',
-              },
-            });
-
-            if (!response.ok) {
-              throw new Error(`${source.label} request failed with ${response.status}`);
-            }
-
-            return response.json();
-          })
-        );
+        const results = await Promise.all(SOURCE_CONFIG.map(fetchSourcePayload));
 
         if (ignore) return;
 
@@ -102,26 +99,62 @@ export default function MissingPodoInvestigationApp() {
         setRecords(sorted);
         setPeople(discoveredPeople);
         setSelectedRecordId(sorted[sorted.length - 1]?.id || null);
-              } catch (err) {
-        console.error(err);
+      } catch (err) {
+        console.error('Failed to load investigation data:', err);
 
-        if (ignore) return;        setRecords([]);
+        if (ignore) return;
+        setRecords([]);
         setPeople([]);
         setSelectedRecordId(null);
-        setError(err instanceof Error ? err.message : 'Jotform data could not be loaded.');
+        setError(getUserFriendlyError(err));
       } finally {
         if (!ignore) {
           setLoading(false);
         }
-      } 
+      }
     }
 
     loadAll();
     return () => {
       ignore = true;
     };
-
   }, []);
+
+  async function fetchSourcePayload(source) {
+    try {
+      const response = await fetch(source.endpoint, {
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`${source.label} request failed with ${response.status} ${response.statusText}`);
+      }
+
+      const text = await response.text();
+
+      try {
+        return JSON.parse(text);
+      } catch (parseError) {
+        throw new Error(`${source.label} returned invalid JSON: ${parseError.message}`);
+      }
+    } catch (fetchError) {
+      throw new Error(`${source.label} fetch failed: ${fetchError.message}`);
+    }
+  }
+
+  function getUserFriendlyError(error) {
+    if (!error) return 'Unknown error loading Jotform data.';
+    if (typeof error === 'string') return error;
+    if (error instanceof Error) return error.message;
+    try {
+      return JSON.stringify(error);
+    } catch {
+      return 'An unexpected error occurred while loading data.';
+    }
+  }
+
 
   const filteredRecords = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -155,10 +188,10 @@ export default function MissingPodoInvestigationApp() {
   const suspectRanking = useMemo(() => rankSuspicion(records), [records]);
 
   return (
-    <div className="min-h-screen bg-[#eef2ff] px-4 py-8 text-slate-900 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl space-y-5">
-        <header className="overflow-hidden rounded-[28px] bg-gradient-to-r from-[#0b2460] to-[#1d4ed8] text-white shadow-xl">
-          <div className="grid gap-6 p-6 lg:grid-cols-[1.3fr_0.7fr] lg:p-8">
+    <div className="app-shell">
+      <div className="app-layout">
+        <header className="app-hero">
+          <div className="app-hero-grid">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-100">Investigation dashboard</p>
               <h1 className="mt-3 text-4xl font-black leading-none tracking-tight sm:text-5xl">
@@ -194,8 +227,8 @@ export default function MissingPodoInvestigationApp() {
           </div>
         ) : null}
 
-        <section className="grid gap-5 lg:grid-cols-[280px_minmax(0,1fr)_340px]">
-          <aside className="space-y-5">
+        <section className="app-grid">
+          <aside className="app-sidebar">
             <Panel title="People">
               <button
                 onClick={() => setSelectedPersonId('all')}
@@ -249,18 +282,18 @@ export default function MissingPodoInvestigationApp() {
             </Panel>
           </aside>
 
-          <main className="space-y-5">
+          <main className="app-main">
             <Panel title="Investigation feed">
-              <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_auto]">
+              <div className="search-row">
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search by person, location, source, or text"
-                  className="rounded-2xl border border-slate-200 px-4 py-3 outline-none ring-0 transition focus:border-blue-500"
+                  className="search-input"
                 />
                 <button
                   onClick={() => setSearch('')}
-                  className="rounded-2xl border border-slate-200 px-4 py-3 font-semibold hover:bg-slate-50"
+                  className="search-clear"
                 >
                   Clear
                 </button>
@@ -278,9 +311,7 @@ export default function MissingPodoInvestigationApp() {
                       <button
                         key={record.id}
                         onClick={() => setSelectedRecordId(record.id)}
-                        className={`w-full rounded-2xl border p-4 text-left transition ${
-                          active ? 'border-blue-600 bg-blue-50' : 'border-slate-200 bg-white hover:bg-slate-50'
-                        }`}
+                        className={`record-card ${active ? 'record-card-active' : ''}`}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex items-center gap-2">
@@ -324,7 +355,7 @@ export default function MissingPodoInvestigationApp() {
             </Panel>
           </main>
 
-          <aside className="space-y-5">
+          <aside className="app-detail">
             <Panel title="Record detail">
               {selectedRecord ? (
                 <div className="space-y-4">
@@ -628,14 +659,25 @@ function rankSuspicion(records) {
 }
 
 function toPersonId(name) {
-  const text = String(name || 'unknown').trim().toLowerCase();
-  const catalog = PERSON_CATALOG[text];
+  const rawText = String(name || 'unknown').trim().toLowerCase();
+  const normalizedText = normalizePersonName(rawText);
+  const aliasKey = PERSON_NAME_ALIASES[normalizedText] || normalizedText;
+  const catalog = PERSON_CATALOG[aliasKey] || PERSON_CATALOG[rawText];
   if (catalog) return catalog.id;
-  return text
+  return aliasKey
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '') || 'unknown';
+}
+
+function normalizePersonName(name) {
+  return String(name || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
 }
 
 function getPersonName(personId) {
@@ -655,35 +697,37 @@ function formatTime(value) {
 
 function Panel({ title, children }) {
   return (
-    <section className="rounded-[24px] border border-[#d9e1f6] bg-white p-5 shadow-sm">
-      <h2 className="text-xl font-black">{title}</h2>
-      <div className="mt-4">{children}</div>
+    <section className="panel">
+      <div className="panel-title-row">
+        <h2>{title}</h2>
+      </div>
+      <div className="panel-body">{children}</div>
     </section>
   );
 }
 
 function Badge({ children, className = '' }) {
-  return <span className={`rounded-full px-4 py-2 text-xs font-black tracking-wide ${className}`}>{children}</span>;
+  return <span className={`badge ${className}`}>{children}</span>;
 }
 
 function StatCard({ label, value }) {
   return (
-    <div className="rounded-2xl bg-white/10 p-3">
-      <div className="text-xs font-bold uppercase tracking-wide text-blue-100">{label}</div>
-      <div className="mt-2 text-lg font-black">{value}</div>
+    <div className="stat-card">
+      <div className="stat-label">{label}</div>
+      <div className="stat-value">{value}</div>
     </div>
   );
 }
 
 function DetailRow({ label, value }) {
   return (
-    <div>
-      <div className="text-xs font-bold uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="mt-1 text-sm font-medium text-slate-800">{value}</div>
+    <div className="detail-row">
+      <div className="detail-label">{label}</div>
+      <div className="detail-value">{value}</div>
     </div>
   );
 }
 
 function EmptyState({ text }) {
-  return <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-600">{text}</div>;
+  return <div className="empty-state">{text}</div>;
 }

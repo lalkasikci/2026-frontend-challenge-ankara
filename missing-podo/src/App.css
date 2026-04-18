@@ -1,38 +1,320 @@
-.App {
-  text-align: center;
+:root {
+  --bg: #eef2ff;
+  --surface: #ffffff;
+  --surface-strong: #f8fbff;
+  --panel-border: rgba(148, 169, 255, 0.18);
+  --text: #0f172a;
+  --muted: #475569;
+  --accent: #2563eb;
+  --accent-soft: #eff6ff;
+  --danger: #f97316;
+  --success: #10b981;
+  --shadow: 0 32px 80px rgba(15, 23, 42, 0.08);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  margin: 0;
   min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top, rgba(37, 99, 235, 0.12), transparent 35%),
+    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.12), transparent 18%),
+    var(--bg);
+  color: var(--text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 32px 20px 48px;
+}
+
+.app-layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  gap: 30px;
+}
+
+.app-hero {
+  border-radius: 32px;
+  background: linear-gradient(135deg, #0b2460 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.app-hero-grid {
+  display: grid;
+  gap: 28px;
+  padding: 40px 36px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+}
+
+.app-hero p,
+.app-hero h1,
+.app-hero .hero-subtitle {
+  margin: 0;
+}
+
+.app-hero h1 {
+  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.app-hero p {
+  margin-top: 1rem;
+  max-width: 42rem;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.app-hero .badge-list {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1.75rem;
+}
+
+.app-hero .summary-panel {
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 24px;
+  backdrop-filter: blur(22px);
+}
+
+.app-hero .summary-panel h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+}
+
+.app-hero .summary-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel {
+  border-radius: 28px;
+  background: var(--surface);
+  border: 1px solid var(--panel-border);
+  padding: 26px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+}
+
+.panel-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.panel-body {
+  margin-top: 1.35rem;
+}
+
+.app-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 280px minmax(0, 1fr) 340px;
+  align-items: start;
+}
+
+.app-sidebar,
+.app-detail {
+  display: grid;
+  gap: 24px;
+}
+
+.app-main {
+  display: grid;
+  gap: 24px;
+}
+
+.search-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.search-input {
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 14px 18px;
+  background: #fbfdff;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.search-clear {
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: white;
+  color: var(--text);
+  font-weight: 700;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.search-clear:hover {
+  transform: translateY(-1px);
+  background: var(--accent-soft);
+}
+
+.record-card {
+  width: 100%;
+  text-align: left;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: white;
+  padding: 22px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.record-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.record-card-active {
+  border-color: rgba(37, 99, 235, 0.8);
+  background: #eff6ff;
+}
+
+.badge {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.badge.bg-yellow-400 {
+  background: #facc15;
+  color: #0f172a;
+}
+
+.badge.bg-white\/15 {
+  background: rgba(255, 255, 255, 0.15);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.badge.bg-pink-500,
+.badge.bg-amber-100,
+.badge.bg-rose-100,
+.badge.bg-violet-100,
+.badge.bg-emerald-100 {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--text);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.stat-card {
+  border-radius: 24px;
+  background: #f7faff;
+  padding: 18px;
+  min-height: 88px;
+  display: grid;
+  gap: 8px;
+}
+
+.stat-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #475569;
+}
+
+.stat-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+.detail-row {
+  margin-top: 18px;
+}
+
+.detail-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.detail-value {
+  margin-top: 6px;
+  font-size: 0.98rem;
+  color: #0f172a;
+}
+
+.empty-state {
+  border-radius: 24px;
+  border: 1px dashed rgba(148, 163, 184, 0.45);
+  background: #f8fafc;
+  padding: 28px;
+  color: #475569;
+  text-align: center;
+}
+
+.app-hero .summary-grid .stat-card:last-child {
+  grid-column: span 2;
+}
+
+@media (max-width: 1080px) {
+  .app-grid {
+    grid-template-columns: 1fr;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+@media (max-width: 840px) {
+  .app-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-hero {
+    padding: 28px 24px;
+  }
+
+  .app-shell {
+    padding: 24px 16px 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .search-clear {
+    width: 100%;
   }
 }
