@@ -1,26 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { FaUserSecret } from 'react-icons/fa';
 import './App.css';
-
-const PERSON_CATALOG = {
-  'selin kaya': { id: 'selin-kaya', name: 'Selin Kaya', role: 'Organizer' },
-  'mert demir': { id: 'mert-demir', name: 'Mert Demir', role: 'Driver' },
-  'ece yalin': { id: 'ece-yalin', name: 'Ece Yalın', role: 'Volunteer' },
-  'ece yalın': { id: 'ece-yalin', name: 'Ece Yalın', role: 'Volunteer' },
-  'kaan arslan': { id: 'kaan-arslan', name: 'Kaan Arslan', role: 'Photographer' },
-  'derya akin': { id: 'derya-akin', name: 'Derya Akın', role: 'Vet student' },
-  'derya akın': { id: 'derya-akin', name: 'Derya Akın', role: 'Vet student' },
-  'kagan': { id: 'kagan', name: 'Kağan', role: 'Person of interest' },
-  podo: { id: 'podo', name: 'Podo', role: 'Missing pet' },
-};
-
-const PERSON_NAME_ALIASES = {
-  'kagan': 'kagan',
-  'kağan': 'kagan',
-  'kağan a': 'kagan',
-  'kağan a.': 'kagan',
-  'kagan a': 'kagan',
-  'kagan a.': 'kagan',
-};
+import iconImage from './icon.png';
 
 const JOTFORM_PROXY_BASE = process.env.REACT_APP_JOTFORM_PROXY_BASE || '/api/jotform';
 
@@ -190,23 +171,18 @@ export default function MissingPodoInvestigationApp() {
   return (
     <div className="app-shell">
       <div className="app-layout">
-        <header className="app-hero">
+        <header className="app-hero animate-fade-in">
           <div className="app-hero-grid">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-100">Investigation dashboard</p>
+              <p className="text-sm font-semibold uppercase tracking-[1em] text-blue-600">Investigation dashboard</p>
               <h1 className="mt-3 text-4xl font-black leading-none tracking-tight sm:text-5xl">
                 Missing Podo: The Ankara Case
               </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-blue-100 sm:text-lg">
-                Records from multiple Jotform sources are merged into a single investigation view to reconstruct Podo’s
+              <p className="mt-4 max-w-2xl text-base leading-7 text-blue-100 sm:text-lg flex items-center gap-2">
+                
+                Records from multiple Jotform sources are merged into a single investigation view to reconstruct Podo's
                 last known route and identify the most suspicious person.
               </p>
-
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Badge className="bg-yellow-400 text-slate-950">MULTI-SOURCE FETCH</Badge>
-                <Badge className="bg-white/15 text-white">RECORD LINKING</Badge>
-                <Badge className="bg-pink-500 text-white">SUSPICION SCORING</Badge>
-              </div>
             </div>
 
             <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 backdrop-blur">
@@ -222,52 +198,45 @@ export default function MissingPodoInvestigationApp() {
         </header>
 
         {error ? (
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800 animate-fade-in-up">
             {error}
           </div>
         ) : null}
 
         <section className="app-grid">
-          <aside className="app-sidebar">
-            <Panel title="People">
+          <aside className="app-sidebar animate-slide-in-left">
+            <Panel title="People" className="animate-fade-in-up">
               <button
                 onClick={() => setSelectedPersonId('all')}
-                className={`mb-2 w-full rounded-2xl border px-3 py-3 text-left text-sm font-semibold transition ${
-                  selectedPersonId === 'all'
-                    ? 'border-slate-900 bg-slate-900 text-white'
-                    : 'border-slate-200 bg-white hover:bg-slate-50'
-                }`}
+                className={`person-button ${selectedPersonId === 'all' ? 'person-button-active' : ''}`}
               >
                 All people
               </button>
 
-              <div className="space-y-2">
-                {people.map((person) => {
+              <div className="person-list">
+                {people.map((person, index) => {
                   const active = selectedPersonId === person.id;
                   return (
                     <button
                       key={person.id}
                       onClick={() => setSelectedPersonId(person.id)}
-                      className={`w-full rounded-2xl border px-3 py-3 text-left transition ${
-                        active ? 'border-blue-600 bg-blue-50' : 'border-slate-200 bg-white hover:bg-slate-50'
-                      }`}
+                      className={`person-button ${active ? 'person-button-active' : ''}`}
+                      style={{ animationDelay: `${index * 0.1}s` }}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <div className="font-bold">{person.name}</div>
-                          <div className="mt-1 text-sm text-slate-600">{person.role}</div>
-                        </div>
-                        <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">
-                          {person.recordCount}
-                        </span>
+                      <div className="person-content">
+                        <div className="person-name">{person.name}</div>
+                        <div className="person-role">{person.role}</div>
                       </div>
+                      <span className="person-count">
+                        {person.recordCount}
+                      </span>
                     </button>
                   );
                 })}
               </div>
             </Panel>
 
-            <Panel title="Investigation hints">
+            <Panel title="Investigation hints" className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="space-y-3 text-sm leading-6 text-slate-700">
                 <p>
                   <span className="font-bold">Last solid sighting:</span> {lastSeen ? `${lastSeen.location} at ${formatTime(lastSeen.time)}` : 'Unknown'}
@@ -282,8 +251,8 @@ export default function MissingPodoInvestigationApp() {
             </Panel>
           </aside>
 
-          <main className="app-main">
-            <Panel title="Investigation feed">
+          <main className="app-main animate-fade-in">
+            <Panel title="Investigation feed" className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <div className="search-row">
                 <input
                   value={search}
@@ -305,13 +274,14 @@ export default function MissingPodoInvestigationApp() {
 
               {!loading && filteredRecords.length > 0 ? (
                 <div className="space-y-3">
-                  {filteredRecords.map((record) => {
+                  {filteredRecords.map((record, index) => {
                     const active = selectedRecord?.id === record.id;
                     return (
                       <button
                         key={record.id}
                         onClick={() => setSelectedRecordId(record.id)}
                         className={`record-card ${active ? 'record-card-active' : ''}`}
+                        style={{ animationDelay: `${index * 0.05}s` }}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex items-center gap-2">
@@ -332,16 +302,16 @@ export default function MissingPodoInvestigationApp() {
               ) : null}
             </Panel>
 
-            <Panel title="Podo timeline">
+            <Panel title="Podo timeline" className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
               {timeline.length === 0 ? (
                 <EmptyState text="No direct Podo records available." />
               ) : (
                 <div className="space-y-4">
                   {timeline.map((item, index) => (
-                    <div key={item.id} className="flex gap-4">
+                    <div key={item.id} className="flex gap-4" style={{ animationDelay: `${index * 0.1}s` }}>
                       <div className="flex flex-col items-center">
-                        <div className="h-4 w-4 rounded-full bg-blue-600" />
-                        {index !== timeline.length - 1 ? <div className="mt-1 h-full w-px bg-slate-200" /> : null}
+                        <div className="h-4 w-4 rounded-full bg-blue-500 animate-pulse" />
+                        {index !== timeline.length - 1 ? <div className="mt-1 h-full w-px bg-slate-300" /> : null}
                       </div>
                       <div className="pb-4">
                         <div className="text-sm font-semibold text-slate-500">{formatTime(item.time)}</div>
@@ -355,8 +325,8 @@ export default function MissingPodoInvestigationApp() {
             </Panel>
           </main>
 
-          <aside className="app-detail">
-            <Panel title="Record detail">
+          <aside className="app-detail animate-slide-in-right">
+            <Panel title="Record detail" className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
               {selectedRecord ? (
                 <div className="space-y-4">
                   <div>
@@ -384,19 +354,17 @@ export default function MissingPodoInvestigationApp() {
               )}
             </Panel>
 
-            <Panel title="Most suspicious">
+            <Panel title="Most suspicious" className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
               <div className="space-y-3">
                 {suspectRanking.map((person, index) => (
-                  <div key={person.id} className="rounded-2xl border border-slate-200 bg-white p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="text-sm font-bold text-slate-500">#{index + 1}</div>
-                        <div className="text-lg font-black">{person.name}</div>
-                        <div className="text-sm text-slate-600">{person.reason}</div>
-                      </div>
-                      <div className="rounded-full bg-slate-900 px-3 py-1 text-sm font-black text-white">
-                        {person.score}
-                      </div>
+                  <div key={person.id} className="suspect-card animate-fade-in-up" style={{ animationDelay: `${0.7 + index * 0.1}s` }}>
+                    <div className="suspect-rank">#{index + 1}</div>
+                    <div className="suspect-content">
+                      <div className="suspect-name">{person.name}</div>
+                      <div className="suspect-reason">{person.reason}</div>
+                    </div>
+                    <div className="suspect-score">
+                      {person.score}
                     </div>
                   </div>
                 ))}
@@ -595,8 +563,7 @@ function buildPeople(records) {
   records.forEach((record) => {
     record.peopleNames.forEach((name) => {
       const id = toPersonId(name);
-      const catalog = PERSON_CATALOG[name.toLowerCase()] || { id, name, role: 'Related person' };
-      const current = map.get(id) || { ...catalog, recordCount: 0 };
+      const current = map.get(id) || { id, name: getPersonName(name), role: 'Related person', recordCount: 0 };
       current.recordCount += 1;
       map.set(id, current);
     });
@@ -661,10 +628,7 @@ function rankSuspicion(records) {
 function toPersonId(name) {
   const rawText = String(name || 'unknown').trim().toLowerCase();
   const normalizedText = normalizePersonName(rawText);
-  const aliasKey = PERSON_NAME_ALIASES[normalizedText] || normalizedText;
-  const catalog = PERSON_CATALOG[aliasKey] || PERSON_CATALOG[rawText];
-  if (catalog) return catalog.id;
-  return aliasKey
+  return normalizedText
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
@@ -672,17 +636,23 @@ function toPersonId(name) {
 }
 
 function normalizePersonName(name) {
-  return String(name || '')
+  let normalized = String(name || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
+
+  
+  if (normalized.includes('kagan') || normalized.includes('kağan')) {
+    return 'kagan';
+  }
+
+  return normalized;
 }
 
 function getPersonName(personId) {
-  const entry = Object.values(PERSON_CATALOG).find((person) => person.id === personId);
-  return entry?.name || personId;
+  return personId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 function formatTime(value) {
@@ -695,19 +665,15 @@ function formatTime(value) {
   });
 }
 
-function Panel({ title, children }) {
+function Panel({ title, children, className = '' }) {
   return (
-    <section className="panel">
+    <section className={`panel ${className}`}>
       <div className="panel-title-row">
         <h2>{title}</h2>
       </div>
       <div className="panel-body">{children}</div>
     </section>
   );
-}
-
-function Badge({ children, className = '' }) {
-  return <span className={`badge ${className}`}>{children}</span>;
 }
 
 function StatCard({ label, value }) {

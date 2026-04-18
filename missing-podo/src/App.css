@@ -1,55 +1,258 @@
 :root {
-  --bg: #eef2ff;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
   --surface: #ffffff;
-  --surface-strong: #f8fbff;
-  --panel-border: rgba(148, 169, 255, 0.18);
-  --text: #0f172a;
-  --muted: #475569;
-  --accent: #2563eb;
-  --accent-soft: #eff6ff;
-  --danger: #f97316;
-  --success: #10b981;
-  --shadow: 0 32px 80px rgba(15, 23, 42, 0.08);
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top, rgba(37, 99, 235, 0.12), transparent 35%),
-    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.12), transparent 18%),
-    var(--bg);
-  color: var(--text);
+  --surface-dark: #e2e8f0;
+  --panel-border: rgba(148, 163, 184, 0.2);
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --accent-primary: #3b82f6;
+  --accent-secondary: #8b5cf6;
+  --accent-tertiary: #ef4444;
+  --neon-pink: #ec4899;
+  --neon-blue: #06b6d4;
+  --neon-green: #10b981;
+  --shadow-primary: 0 10px 40px rgba(59, 130, 246, 0.15);
+  --shadow-secondary: 0 4px 20px rgba(139, 92, 246, 0.1);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --gradient-secondary: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
+  --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
 }
 
 * {
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
+    linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 30% 70%, rgba(59, 130, 246, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 70% 30%, rgba(139, 92, 246, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 40%);
+  animation: backgroundShift 25s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Animasyon Keyframes */
+@keyframes backgroundShift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translate(10px, -10px) scale(1.05);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-5px, 5px) scale(0.95);
+    opacity: 0.9;
+  }
+  75% {
+    transform: translate(-10px, -5px) scale(1.02);
+    opacity: 0.7;
+  }
+}
+
+@keyframes neonGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6), 0 0 60px rgba(0, 212, 255, 0.4), 0 0 90px rgba(0, 212, 255, 0.2);
+  }
+}
+
+@keyframes matrixRain {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(100px, 100px);
+  }
+}
+
+/* Genel Animasyon Sınıfları */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animate-glow {
+  animation: glow 2s infinite;
+}
+
+.animate-neon-glow {
+  animation: neonGlow 3s ease-in-out infinite;
+}
+
+.animate-hologram {
+  animation: hologram 4s ease-in-out infinite;
+}
+
+.animate-matrix-rain {
+  animation: matrixRain 8s linear infinite;
+}
+
+/* Loading State */
+.loading-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Button ve Input Stilleri */
 button,
 input,
 textarea {
   font: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Ana Uygulama Kabuğu */
 .app-shell {
   min-height: 100vh;
   padding: 32px 20px 48px;
+  background: transparent;
+  position: relative;
+}
+
+.app-shell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 98px,
+      rgba(0, 255, 136, 0.03) 98px,
+      rgba(0, 255, 136, 0.03) 100px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 98px,
+      rgba(255, 0, 128, 0.03) 98px,
+      rgba(255, 0, 128, 0.03) 100px
+    );
+  animation: gridMove 30s linear infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .app-layout {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
   display: grid;
   gap: 30px;
 }
 
+/* Hero Bölümü - Modern ve Yumuşak Tasarım */
 .app-hero {
-  border-radius: 32px;
-  background: linear-gradient(135deg, #0b2460 0%, #1d4ed8 100%);
-  color: white;
-  box-shadow: var(--shadow);
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(6, 182, 212, 0.08) 100%),
+    linear-gradient(45deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-primary);
   overflow: hidden;
+  position: relative;
+  animation: fadeInUp 1s ease-out;
+}
+
+.app-hero::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+  border-radius: 26px;
+  z-index: -1;
+  opacity: 0.3;
+  animation: gentleGlow 6s ease-in-out infinite;
+}
+
+.app-hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+  animation: backgroundShift 20s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .app-hero-grid {
@@ -57,26 +260,48 @@ textarea {
   gap: 28px;
   padding: 40px 36px;
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
-}
-
-.app-hero p,
-.app-hero h1,
-.app-hero .hero-subtitle {
-  margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .app-hero h1 {
-  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  font-size: clamp(3rem, 5vw, 5.5rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
+  font-weight: 900;
+  background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  animation: gentleGlow 4s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  position: relative;
+}
+
+.app-hero h1::before {
+  content: 'MISSING POD';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(45deg, var(--accent-secondary), var(--accent-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gentleGlow 4s ease-in-out infinite reverse;
+  opacity: 0.6;
+  z-index: -1;
 }
 
 .app-hero p {
-  margin-top: 1rem;
+  margin: 1rem 0 0 0;
   max-width: 42rem;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--text-secondary);
   line-height: 1.8;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  animation: fadeInUp 1s ease-out 0.2s both;
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
 }
 
 .app-hero .badge-list {
@@ -84,20 +309,39 @@ textarea {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 1.75rem;
+  animation: fadeInUp 1s ease-out 0.4s both;
 }
 
 .app-hero .summary-panel {
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 136, 0.3);
   padding: 24px;
-  backdrop-filter: blur(22px);
+  backdrop-filter: blur(20px);
+  animation: slideInRight 1s ease-out 0.6s both;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+  position: relative;
+}
+
+.app-hero .summary-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 21px;
+  z-index: -1;
+  animation: neonGlow 5s ease-in-out infinite;
 }
 
 .app-hero .summary-panel h2 {
   margin: 0;
   font-size: 1.05rem;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .app-hero .summary-grid {
@@ -107,13 +351,55 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* Panel Stilleri - Modern ve Yumuşak Tasarım */
 .panel {
-  border-radius: 28px;
+  border-radius: 20px;
   background: var(--surface);
   border: 1px solid var(--panel-border);
   padding: 26px;
-  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow-secondary);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
 }
+
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.panel:hover::before {
+  opacity: 0.6;
+}
+
+.panel:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.panel:hover::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 22px;
+  z-index: -1;
+  opacity: 0.05;
+  animation: gentleGlow 3s ease-in-out infinite;
+}
+
 
 .panel-title-row {
   display: flex;
@@ -123,17 +409,20 @@ textarea {
 
 .panel h2 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .panel-body {
   margin-top: 1.35rem;
 }
 
+/* Grid Layout */
 .app-grid {
   display: grid;
   gap: 24px;
-  grid-template-columns: 280px minmax(0, 1fr) 340px;
+  grid-template-columns: 320px minmax(0, 1fr) 360px;
   align-items: start;
 }
 
@@ -148,6 +437,7 @@ textarea {
   gap: 24px;
 }
 
+/* Arama Bölümü */
 .search-row {
   display: grid;
   gap: 12px;
@@ -156,77 +446,216 @@ textarea {
 
 .search-input {
   width: 100%;
-  border-radius: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
   padding: 14px 18px;
-  background: #fbfdff;
-  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  backdrop-filter: blur(10px);
 }
 
 .search-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  animation: neonGlow 2s ease-in-out infinite;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
 }
 
 .search-clear {
-  border-radius: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  background: white;
-  color: var(--text);
-  font-weight: 700;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-weight: 600;
   padding: 14px 18px;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
 }
 
 .search-clear:hover {
-  transform: translateY(-1px);
-  background: var(--accent-soft);
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+  animation: neonGlow 2s ease-in-out infinite;
 }
 
+/* Kayıt Kartları - Modern ve Yumuşak Tasarım */
 .record-card {
   width: 100%;
   text-align: left;
-  border-radius: 24px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: var(--surface);
   padding: 22px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.record-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
 }
 
 .record-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(37, 99, 235, 0.35);
-  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+}
+
+.record-card:hover::before {
+  opacity: 0.03;
 }
 
 .record-card-active {
-  border-color: rgba(37, 99, 235, 0.8);
-  background: #eff6ff;
+  border-color: var(--accent-primary);
+  background: rgba(59, 130, 246, 0.02);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+.record-card-active::before {
+  opacity: 0.15;
+}
+
+/* Kayıt Kartı İçerik - Modern ve Yumuşak Efektler */
+.record-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.record-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.record-card-icon::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: rotate(45deg);
+  animation: shimmer 4s ease-in-out infinite;
+}
+
+.record-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  text-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+  position: relative;
+}
+
+.record-card-title::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  transition: width 0.3s ease;
+}
+
+.record-card:hover .record-card-title::after {
+  width: 100%;
+}
+
+.record-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.record-card-meta-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  transition: all 0.3s ease;
+}
+
+.record-card:hover .record-card-meta-item {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: var(--accent-primary);
+}
+
+.record-card-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.record-card:hover .record-card-description {
+  color: var(--text-primary);
+}
+
+/* Badge Stilleri */
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .badge.bg-yellow-400 {
-  background: #facc15;
-  color: #0f172a;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1f2937;
 }
 
 .badge.bg-white\/15 {
   background: rgba(255, 255, 255, 0.15);
   color: white;
+  backdrop-filter: blur(10px);
 }
 
 .badge.bg-pink-500,
@@ -234,31 +663,57 @@ textarea {
 .badge.bg-rose-100,
 .badge.bg-violet-100,
 .badge.bg-emerald-100 {
-  background: rgba(37, 99, 235, 0.08);
-  color: var(--text);
+  background: var(--gradient-secondary);
+  color: white;
 }
 
+/* İstatistik Kartları */
 .stat-card {
-  border-radius: 24px;
-  background: #f7faff;
+  border-radius: 16px;
+  background: var(--bg-secondary);
   padding: 18px;
   min-height: 88px;
   display: grid;
   gap: 8px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-accent);
+  opacity: 0.6;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-secondary);
+  border-color: rgba(0, 212, 170, 0.2);
 }
 
 .stat-label {
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #475569;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 .stat-value {
   font-size: 1.45rem;
   font-weight: 800;
+  color: var(--accent-primary);
+  text-shadow: 0 0 10px rgba(0, 212, 170, 0.3);
 }
 
+/* Detay Bölümü */
 .detail-row {
   margin-top: 18px;
 }
@@ -267,54 +722,283 @@ textarea {
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 .detail-value {
   margin-top: 6px;
   font-size: 0.98rem;
-  color: #0f172a;
+  color: var(--text-primary);
+  line-height: 1.6;
 }
 
+/* Boş Durum */
 .empty-state {
-  border-radius: 24px;
-  border: 1px dashed rgba(148, 163, 184, 0.45);
-  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  background: var(--bg-secondary);
   padding: 28px;
-  color: #475569;
+  color: var(--text-secondary);
   text-align: center;
+  position: relative;
 }
 
-.app-hero .summary-grid .stat-card:last-child {
-  grid-column: span 2;
+.empty-state::before {
+  content: '🔍';
+  font-size: 2rem;
+  opacity: 0.3;
+  display: block;
+  margin-bottom: 1rem;
 }
 
-@media (max-width: 1080px) {
+/* Kişi Listesi */
+.person-list {
+  display: grid;
+  gap: 8px;
+}
+
+.person-button {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: var(--surface);
+  padding: 14px 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.person-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.person-button:hover {
+  border-color: rgba(0, 212, 170, 0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 212, 170, 0.2);
+}
+
+.person-button:hover::before {
+  opacity: 0.05;
+}
+
+.person-button-active {
+  border-color: var(--accent-primary);
+  background: rgba(0, 212, 170, 0.05);
+  box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.2);
+}
+
+.person-button-active::before {
+  opacity: 0.1;
+}
+
+.person-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.person-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.person-role {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.person-count {
+  background: var(--bg-tertiary);
+  color: var(--accent-primary);
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 212, 170, 0.2);
+}
+
+.person-button-active .person-count {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border-color: var(--accent-primary);
+}
+
+/* Responsive Tasarım */
+@media (max-width: 1024px) {
+  .app-grid {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .app-detail {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    padding: 20px 16px 32px;
+  }
+
+  .app-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 32px 24px;
+  }
+
   .app-grid {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 840px) {
-  .app-hero-grid {
-    grid-template-columns: 1fr;
+  .app-sidebar {
+    order: 2;
   }
 
-  .app-hero {
-    padding: 28px 24px;
-  }
-
-  .app-shell {
-    padding: 24px 16px 36px;
+  .app-main {
+    order: 1;
   }
 }
 
-@media (max-width: 640px) {
-  .search-row {
-    grid-template-columns: 1fr;
-  }
+/* Şüpheli Sıralama - Renkli ve Dikkat Çekici */
+.suspect-card {
+  border-radius: 16px;
+  background: var(--surface);
+  border: 2px solid;
+  border-image: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) 1;
+  padding: 20px;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+}
 
-  .search-clear {
-    width: 100%;
+.suspect-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.suspect-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.2);
+}
+
+.suspect-card:hover::before {
+  opacity: 1;
+}
+
+.suspect-rank {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.suspect-content {
+  margin-left: 48px;
+}
+
+.suspect-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.suspect-reason {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.suspect-score {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, var(--accent-tertiary), #f97316);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Focus States for Accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Ek Animasyonlar */
+@keyframes gentleGlow {
+  0%, 100% {
+    opacity: 0.3;
+    filter: brightness(1) saturate(1);
   }
+  50% {
+    opacity: 0.5;
+    filter: brightness(1.1) saturate(1.2);
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
 }
