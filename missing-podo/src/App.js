@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { FaUserSecret } from 'react-icons/fa';
+import React, { startTransition, useEffect, useMemo, useState } from 'react';
 import './App.css';
-import iconImage from './icon.png';
 
 const JOTFORM_PROXY_BASE = process.env.REACT_APP_JOTFORM_PROXY_BASE || '/api/jotform';
 
@@ -77,16 +75,20 @@ export default function MissingPodoInvestigationApp() {
         const sorted = merged.sort((a, b) => new Date(a.time) - new Date(b.time));
         const discoveredPeople = buildPeople(sorted);
 
-        setRecords(sorted);
-        setPeople(discoveredPeople);
-        setSelectedRecordId(sorted[sorted.length - 1]?.id || null);
+        startTransition(() => {
+          setRecords(sorted);
+          setPeople(discoveredPeople);
+          setSelectedRecordId(sorted[sorted.length - 1]?.id || null);
+        });
       } catch (err) {
         console.error('Failed to load investigation data:', err);
 
         if (ignore) return;
-        setRecords([]);
-        setPeople([]);
-        setSelectedRecordId(null);
+        startTransition(() => {
+          setRecords([]);
+          setPeople([]);
+          setSelectedRecordId(null);
+        });
         setError(getUserFriendlyError(err));
       } finally {
         if (!ignore) {
@@ -179,14 +181,16 @@ export default function MissingPodoInvestigationApp() {
                 Missing Podo: The Ankara Case
               </h1>
               <p className="mt-4 max-w-2xl text-base leading-7 text-blue-100 sm:text-lg flex items-center gap-2">
-                
                 Records from multiple Jotform sources are merged into a single investigation view to reconstruct Podo's
                 last known route and identify the most suspicious person.
               </p>
+              <div className="hero-icon-card">
+                <img src="/icon.png" alt="Missing Podo illustration" className="hero-icon" />
+              </div>
             </div>
 
-            <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 backdrop-blur">
-              <h2 className="text-lg font-bold">Case summary</h2>
+            <div className="rounded-[24px] border border-white/15 bg-white/10 p-4 backdrop-blur case-summary-panel">
+              <h2 className="case-summary-title">Case Summary</h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                 <StatCard label="Records loaded" value={String(records.length)} />
                 <StatCard label="Linked people" value={String(people.length)} />
@@ -648,10 +652,18 @@ function normalizePersonName(name) {
     return 'kagan';
   }
 
+  if (normalized === 'asl' || normalized === 'asli') {
+    return 'asli';
+  }
+
   return normalized;
 }
 
 function getPersonName(personId) {
+  if (personId === 'asli') {
+    return 'Aslı';
+  }
+
   return personId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
