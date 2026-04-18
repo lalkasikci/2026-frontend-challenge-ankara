@@ -3,29 +3,111 @@
 ## User Information
 Please fill in your information after forking this repository:
 
-- **Name**: [Your Name]
+- **Name**: Zeynep Lal Kaşıkçı
 
 ## Project Description
-[Add a brief description of your project here]
+**Missing Podo** - Dedektif tarzı bir soruşturma uygulaması. Jotform API'lerinden gerçek verileri çekerek, kişilerin hareketlerini takip eder ve şüpheli sıralaması yapar.
 
-## Getting Started
-[Add instructions for setting up and running the project]
+Bu proje, Jotform formlarından gelen check-in, mesaj, gözlem, not ve ihbar verilerini normalize ederek, interaktif bir soruşturma panosu sunar.
 
-# 🚀 Challenge Duyurusu
+## Özellikler
+- 🔍 **Gerçek Zamanlı Veri Çekme**: Jotform API'lerinden çoklu form verilerini alır
+- 👥 **Dinamik Kişi Kataloğu**: Verilerden otomatik kişi çıkarımı
+- 📊 **Şüpheli Sıralaması**: Yakınlık ve kayıt türüne göre puanlama algoritması
+- 🕐 **Zaman Çizelgesi**: Kronolojik olay akışı
+- 🔎 **Arama ve Filtreleme**: Kişi ve konum bazlı filtreleme
+- 📱 **Responsive Tasarım**: Mobil uyumlu modern arayüz
 
-## 📅 Tarih ve Saat
-Cumartesi günü başlama saatinden itibaren üç saattir.
+## Teknoloji Stack
+- **Frontend**: React 18, Create React App
+- **Backend**: Node.js, Express (Proxy Server)
+- **API**: Jotform REST API
+- **Styling**: Custom CSS (Tailwind-inspired)
 
-## 🎯 Challenge Konsepti
-Bu challenge'da, size özel hazırlanmış bir senaryo üzerine web uygulaması geliştirmeniz istenecektir. Challenge başlangıcında senaryo detayları paylaşılacaktır.Katılımcılar, verilen GitHub reposunu fork ederek kendi geliştirme ortamlarını oluşturacaklardır.
+## Kurulum ve Çalıştırma Talimatları
 
-## 📦 GitHub Reposu
-Challenge için kullanılacak repo: https://github.com/cemjotform/2026-frontend-challenge-ankara
+### Gereksinimler
+- Node.js (v16 veya üzeri)
+- npm veya yarn
+- Git
 
-## 🛠️ Hazırlık Süreci
-1. GitHub reposunu fork edin
-2. Tercih ettiğiniz framework ile geliştirme ortamınızı hazırlayın
-3. Hazırladığınız setup'ı fork ettiğiniz repoya gönderin
+### 1. Projeyi Klonlayın
+```bash
+git clone https://github.com/[YOUR_USERNAME]/2026-frontend-challenge-ankara.git
+cd 2026-frontend-challenge-ankara
+```
 
-## 💡 Önemli Notlar
-- Katılımcılar kendi tercih ettikleri framework'leri kullanabilirler
+### 2. Bağımlılıkları Yükleyin
+```bash
+cd missing-podo
+npm install
+```
+
+### 3. API Anahtarlarını Yapılandırın
+`src/api.js` dosyasında Jotform API anahtarlarınızı ve form ID'lerinizi ayarlayın:
+
+```javascript
+// Örnek yapılandırma
+export const API_KEYS = [
+  'your_api_key_1',
+  'your_api_key_2',
+  // ...
+];
+
+export const FORM_IDS = {
+  checkins: 'your_checkin_form_id',
+  messages: 'your_messages_form_id',
+  // ...
+};
+```
+
+### 4. Proxy Server'ı Başlatın
+Backend proxy server'ı ayrı bir terminalde çalıştırın:
+```bash
+# missing-podo klasöründe
+node server.js
+```
+Server varsayılan olarak http://localhost:5001 adresinde çalışacaktır.
+
+### 5. React Uygulamasını Başlatın
+Yeni bir terminal açın ve frontend'i başlatın:
+```bash
+# missing-podo klasöründe
+npm start
+```
+Uygulama http://localhost:3000 adresinde açılacaktır.
+
+### 6. Testleri Çalıştırın
+```bash
+npm test
+```
+
+## Proje Yapısı
+```
+missing-podo/
+├── public/                 # Statik dosyalar
+├── src/
+│   ├── api.js             # API yapılandırması
+│   ├── App.js             # Ana uygulama bileşeni
+│   ├── App.css            # Özel stiller
+│   └── ...
+├── server.js              # Proxy server
+└── package.json           # Bağımlılıklar
+```
+
+## API Yapısı
+Uygulama aşağıdaki Jotform form türlerini kullanır:
+- **Check-ins**: Kişilerin konum girişleri
+- **Messages**: İletişim kayıtları
+- **Sightings**: Gözlem raporları
+- **Notes**: Özel notlar
+- **Tips**: İhbarlar
+
+## Sorun Giderme
+- **Port çakışması**: Eğer 3000 veya 5001 portları kullanımda ise, alternatif port kullanın
+- **API hataları**: API anahtarlarınızın geçerli olduğundan emin olun
+- **CORS hataları**: Proxy server'ın çalıştığından emin olun
+
+## Geliştirme
+Bu proje Jotform Frontend Challenge için geliştirilmiştir ve gerçek dünya senaryosu simülasyonu içerir.
+
